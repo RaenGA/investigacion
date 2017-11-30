@@ -8,11 +8,15 @@ package INTERFAZ;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
 
 /**
  *
@@ -21,8 +25,6 @@ import javax.swing.JOptionPane;
 public class CRUDaficionados extends javax.swing.JFrame {
     public static String cod;
     String codigoUsuario;
-    DB db;
-    DBCollection tabla;
 
     /**
      * Creates new form CRUDaficionados
@@ -30,6 +32,7 @@ public class CRUDaficionados extends javax.swing.JFrame {
     public CRUDaficionados(){
         initComponents();
         this.setLocationRelativeTo(null);
+        cargarDatos();
     }
     
     public CRUDaficionados(String user) {
@@ -39,11 +42,19 @@ public class CRUDaficionados extends javax.swing.JFrame {
     }
     
     public void cargarDatos(){
-        DBCursor cursor = tabla.find();
+        coleccion = db.getCollection("aficionados");
+        DBCursor cursor = coleccion.find();
+        DefaultTableModel tb = (DefaultTableModel)tableAficionado.getModel();
         while(cursor.hasNext()){
+           DBObject actual = cursor.next();
+           String val1 = (String) actual.get("codigoAficionado");
+           String val2 = (String) actual.get("contrasenna");
+           String val3 = (String) actual.get("correo");
+           tb.addRow(new Object[] {val1, val2, val3});
             //tableAficionado.setText(cursor.);
-        }
+        }    
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
