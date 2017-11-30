@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+
+
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
 
@@ -29,12 +31,14 @@ import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
  * @author M Express
  */
 public class CrearResumen extends javax.swing.JFrame {
-
+    JFileChooser archivo = new JFileChooser();
+    File video = archivo.getSelectedFile();
     /**
      * Creates new form CrearResumen
      */
     public CrearResumen() {
         initComponents();
+        
     }
 
     /**
@@ -170,24 +174,27 @@ public class CrearResumen extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         
-        JFileChooser archivo = new JFileChooser();
+        
         int ventana =  archivo.showOpenDialog(null);
         if(ventana == JFileChooser.APPROVE_OPTION)
         {
             
-            File image = archivo.getSelectedFile();
-            jTextArea2.setText(String.valueOf(image));
+            video = archivo.getSelectedFile();
+            jTextArea2.setText(String.valueOf(video));
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        coleccion = db.getCollection("resumen");
+        coleccion = db.getCollection("resumenPartido");
         BasicDBObject document = new BasicDBObject();
-        
         document.put("Numero Partido", txtNumPartido.getText());
         document.put("Resumen",jTextArea1.getText());
-        document.put("Videos",jTextArea2.getText());
+        try {
+            addImage(video, video.getName());
+        } catch (IOException ex) {
+            Logger.getLogger(CrearResumen.class.getName()).log(Level.SEVERE, null, ex);
+        }
         coleccion.insert(document);
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -238,6 +245,8 @@ public class CrearResumen extends javax.swing.JFrame {
         gridFSImage.writeTo("temp\\"+imageName+".jpg");
         return new File("temp\\"+imageName+".jpg");
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
