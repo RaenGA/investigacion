@@ -5,42 +5,31 @@
  */
 package INTERFAZ;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import tareainvestigacion.mongodb.TareaInvestigacionMONGODB;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.usuarioGlobal;
 
 /**
  *
  * @author M Express
  */
 public class CRUDaficionados extends javax.swing.JFrame {
-    public static String cod;
-    String codigoUsuario;
-
+    
+    public static String usuarioCRUD;
     /**
-     * Creates new form CRUDaficionados
+     * Creates new form CRUDresumen
      */
-    public CRUDaficionados(){
+    public CRUDaficionados() {
         initComponents();
         this.setLocationRelativeTo(null);
         cargarDatos();
     }
-    
-    public CRUDaficionados(String user) {
-        initComponents();
-        this.setLocationRelativeTo(null);
-        this.codigoUsuario = user;
-    }
-    
+
     public void cargarDatos(){
         coleccion = db.getCollection("aficionados");
         DBCursor cursor = coleccion.find();
@@ -54,8 +43,6 @@ public class CRUDaficionados extends javax.swing.JFrame {
             //tableAficionado.setText(cursor.);
         }    
     }
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -67,13 +54,12 @@ public class CRUDaficionados extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tableAficionado = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        lblUsuario = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,11 +68,11 @@ public class CRUDaficionados extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Código Aficionado", "Contraseña", "Correo"
+                "codigoAficionado", "Contraseña", "Correo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -94,18 +80,23 @@ public class CRUDaficionados extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tableAficionado);
+        tableAficionado.getAccessibleContext().setAccessibleDescription("");
 
-        jButton1.setText("Crear Aficionado");
+        jLabel1.setText("Aficionados");
+
+        lblUsuario.setText("Usuario");
+
+        jButton1.setText("Crear Aficiionado");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Actualizar Aficionado");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnActualizar.setText("Actualizar Aficionado");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnActualizarActionPerformed(evt);
             }
         });
 
@@ -116,10 +107,6 @@ public class CRUDaficionados extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Ver foto");
-
-        lblUsuario.setText("Usuario");
-
         jButton5.setText("Regresar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,55 +114,50 @@ public class CRUDaficionados extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("CRUD Aficionados");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton5)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton2)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton3)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton4)))
-                        .addGap(0, 48, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(266, 266, 266))
+                        .addComponent(jLabel1)
+                        .addGap(287, 287, 287))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblUsuario)
+                        .addContainerGap())))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(85, 85, 85)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblUsuario)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(38, 38, 38)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
+                .addGap(40, 40, 40)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                    .addComponent(btnActualizar)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addComponent(jButton5))
         );
 
@@ -183,41 +165,34 @@ public class CRUDaficionados extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        CrearAficionado CAfi = new CrearAficionado(this.codigoUsuario);
-        CAfi.setVisible(true);
-        this.setVisible(false);
-        // TODO add your handling code here:
+        CrearAficionado CAfi = new CrearAficionado();
+	CAfi.setVisible(true);
+	this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int filasSeleccionadas = tableAficionado.getSelectedRow();
-        if(filasSeleccionadas == -1){
-            //int row = tableAficionado.getSelectedRow();
-            cod = "A2500";
-            //codigoUsuario = tableAficionado.getValueAt(row, 0).toString();
-            ModificarAficionado MAfi = new ModificarAficionado(this.codigoUsuario);
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        int filasSeleccionadas = tableAficionado.getSelectedRowCount();
+        if(filasSeleccionadas == 0){
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna fila");            
+        }else{
+            int row = tableAficionado.getSelectedRow();
+            usuarioCRUD = tableAficionado.getValueAt(row, 0).toString();
+            ModificarAficionado MAfi = new ModificarAficionado();
             MAfi.setVisible(true);
             this.setVisible(false);
-            
-        }else{
-            JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna fila");
         }
-        
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //BoAficionado MAfi = new ModificarAficionado();
-        //MAfi.setVisible(true);
-        //this.setVisible(false);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        MenuAdmin mAd = new MenuAdmin(this.codigoUsuario);
+        MenuAdmin mAd = new MenuAdmin();
         mAd.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        //CODIGO BORRAR
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -245,21 +220,20 @@ public class CRUDaficionados extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(CRUDaficionados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CRUDaficionados().setVisible(true);
-                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

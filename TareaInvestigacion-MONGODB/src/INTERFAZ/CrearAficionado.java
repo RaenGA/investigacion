@@ -6,6 +6,10 @@
 package INTERFAZ;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSInputFile;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,16 +21,17 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import tareainvestigacion.mongodb.TareaInvestigacionMONGODB;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
-
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.usuarioGlobal;
 /**
  *
  * @author M Express
  */
 public class CrearAficionado extends javax.swing.JFrame {
-
-    String usuario;
+    JFileChooser archivo = new JFileChooser();
+    File archi = archivo.getSelectedFile();
     /**
      * Creates new form CrearAficionado
      */
@@ -34,13 +39,7 @@ public class CrearAficionado extends javax.swing.JFrame {
         initComponents();
         this.setVisible(true);
     }
-    
-    public CrearAficionado(String user) {
-        initComponents();
-        this.setVisible(true);
-        this.usuario = user;
-    }
-    
+      
     public boolean validar(){
         boolean val = true;
         if((txtCodigo.getText().isEmpty())&&(val == true)){
@@ -88,6 +87,8 @@ public class CrearAficionado extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel4.setText("Foto");
+
+        txtImage.setEnabled(false);
 
         btnImage.setText("Seleccionar foto");
         btnImage.addActionListener(new java.awt.event.ActionListener() {
@@ -232,15 +233,23 @@ public class CrearAficionado extends javax.swing.JFrame {
             dimg = dimg.getScaledInstance(labelFoto.getWidth(), labelFoto.getHeight(), Image.SCALE_DEFAULT);
             labelFoto.setIcon(new ImageIcon(dimg));
 
+            archi = file;
             /*Imagen Imagen = new Imagen(txtImage.getText());
             jPanel1.add(Imagen);
             jPanel1.repaint();*/
         }
     }//GEN-LAST:event_btnImageActionPerformed
 
+    public void addImage(File image, String imageName) throws java.rmi.UnknownHostException, IOException{
+        GridFS gfsImageCollection = new GridFS(coleccion.getDB(), "image");
+        GridFSInputFile gfsFile = gfsImageCollection.createFile(image);
+        gfsFile.setFilename(imageName);
+        gfsFile.save();
+    }
+    
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         if(validar() == false){
-            JOptionPane.showMessageDialog(null, "Uno de los datos que desea registrar se encuentran vacios");
+            JOptionPane.showMessageDialog(null, "No pueden existir campos vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         else{
             if(txtCodigo.getText().length() <= 15){
@@ -251,33 +260,51 @@ public class CrearAficionado extends javax.swing.JFrame {
                 if(chkCorreo.isSelected()){
                     correo = 1;
                 }
+                
+                String contrasenaEncriptada = TareaInvestigacionMONGODB.encriptar(txtContraseña.getText());
                 coleccion = db.getCollection("aficionados");
-                BasicDBObject document = new BasicDBObject();
-                document.put("codigoAficionado","'" + txtCodigo.getText() + "'");
-                document.put("contrasenna","'" + txtContraseña.getText() + "'");
-                document.put("correo","'" + txtCorreo.getText() + "'");
-                document.put("imagen","'" + txtImage.getText() + "'");
-                document.put("mFoto","'" + foto + "'");
-                document.put("mCorreo","'" + correo + "'");
-                coleccion.insert(document);
-                // TODO add your handling code here:
-
-                JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
-                CRUDaficionados CrudAfi;
-                CrudAfi = new CRUDaficionados(this.usuario);
-                CrudAfi.setVisible(true);
-                this.setVisible(false);
+                DBCursor cursor = coleccion.find();
+                int encontrado = 0;
+                while(cursor.hasNext()){
+                    DBObject actual = cursor.next();
+                    String cAficionado = (String) actual.get("codigoAficionado");
+                    if(cAficionado.equals(txtCodigo.getText())){
+                        JOptionPane.showMessageDialog(null, "Codigo de Usuario Incorrecto. Ingrese uno diferente.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        encontrado = 1;
+                        break;
+                    }
                 }
-                else{
-                    JOptionPane.showMessageDialog(null, "La longitud del codigo supera el limite");
+                if(encontrado == 0){
+                    BasicDBObject document = new BasicDBObject();
+                    document.put("codigoAficionado", txtCodigo.getText());
+                    document.put("contrasenna", contrasenaEncriptada);
+                    document.put("correo", txtCorreo.getText());
+                    document.put("imagen", txtImage.getText());
+                    document.put("mFoto", foto);
+                    document.put("mCorreo", correo);
+                    coleccion.insert(document);
+                    try {
+                        addImage(archi, archi.getName());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        // TODO add your handling code here:
+                    JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+                    Inicio ini = new Inicio(); 
+                    ini.setVisible(true);
+                    this.setVisible(false);
                 }
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Codigo de Usuario mayor a 15 caracteres.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
         }
         
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         CRUDaficionados CrudAfi;
-        CrudAfi = new CRUDaficionados(this.usuario);
+        CrudAfi = new CRUDaficionados();
         CrudAfi.setVisible(true);
         this.setVisible(false);
         

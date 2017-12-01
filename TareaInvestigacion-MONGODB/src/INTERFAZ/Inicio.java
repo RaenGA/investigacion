@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import tareainvestigacion.mongodb.TareaInvestigacionMONGODB;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
-
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.usuarioGlobal;
 /**
  *
  * @author M Express
@@ -175,6 +175,7 @@ public class Inicio extends javax.swing.JFrame {
                 }
                 if(encontrado == 1){
                     JOptionPane.showMessageDialog(null, "Usuario y Contraseña Correctas.");
+                    usuarioGlobal = txtCodigo.getText();
                     if(txtCodigo.getText().equals("ADMINISTRADOR")){
                         MenuAdmin mAdm = new MenuAdmin();
                         mAdm.setVisible(true);

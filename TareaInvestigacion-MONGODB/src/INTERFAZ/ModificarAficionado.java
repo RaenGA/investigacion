@@ -4,46 +4,40 @@
  * and open the template in the editor.
  */
 package INTERFAZ;
-import static INTERFAZ.CRUDaficionados.cod;
+//import static INTERFAZ.CRUDaficionados.cod;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSInputFile;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import tareainvestigacion.mongodb.TareaInvestigacionMONGODB;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.usuarioGlobal;
 /**
  *
  * @author M Express
  */
 public class ModificarAficionado extends javax.swing.JFrame {
-    String usuario;
-    String codigoAficionado;
+    JFileChooser archivo = new JFileChooser();
+    File archi = archivo.getSelectedFile();
     /**
      * Creates new form ModificarAficionado
      */
     public ModificarAficionado() {
         initComponents();
         this.setLocationRelativeTo(null);
-    }
-    
-    public ModificarAficionado(String user, String aficionado) {
-        initComponents();
-        this.setLocationRelativeTo(null);
-        this.usuario = user;
-        this.codigoAficionado = aficionado;
-    }
-    
-    public ModificarAficionado(String user) {
-        initComponents();
-        this.setLocationRelativeTo(null);
-        this.usuario = user;
     }
     
     public boolean validar(){
@@ -94,6 +88,11 @@ public class ModificarAficionado extends javax.swing.JFrame {
         jLabel4.setText("Foto");
 
         jButton1.setText("Regresar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Modificar Aficionado");
 
@@ -230,16 +229,20 @@ public class ModificarAficionado extends javax.swing.JFrame {
             Image dimg = getToolkit().getImage(txtImage.getText());
             dimg = dimg.getScaledInstance(labelFoto.getWidth(), labelFoto.getHeight(), Image.SCALE_DEFAULT);
             labelFoto.setIcon(new ImageIcon(dimg));
-
-            /*Imagen Imagen = new Imagen(txtImage.getText());
-            jPanel1.add(Imagen);
-            jPanel1.repaint();*/
+            
+            archi = file;
         }
     }//GEN-LAST:event_btnImageActionPerformed
 
+    public void addImage(File image, String imageName) throws UnknownHostException, IOException{
+        GridFS gfsImageCollection = new GridFS(coleccion.getDB(), "image");
+        GridFSInputFile gfsFile = gfsImageCollection.createFile(image);
+        gfsFile.setFilename(imageName);
+        gfsFile.save();
+    }
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         if(validar() == false){
-            JOptionPane.showMessageDialog(null, "Unos de los valores que desea modificar se encuentra vacio");
+            JOptionPane.showMessageDialog(null, "No pueden existir campos vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         else{
             if(txtCodigo.getText().length() <= 15){
@@ -250,33 +253,59 @@ public class ModificarAficionado extends javax.swing.JFrame {
                 if(chkCorreo.isSelected()){
                     correo = 1;
                 }
+                
+                String contrasenaEncriptada = TareaInvestigacionMONGODB.encriptar(txtContraseña.getText());
                 coleccion = db.getCollection("aficionados");
-                BasicDBObject document = new BasicDBObject();
-                document.put("codigoAficionado", cod);
-                DBCursor docCursor = coleccion.find(document);
-                if(docCursor.hasNext()) {
-                    DBObject newDoc = docCursor.next();
-                    newDoc.put("codigoAficionado", txtCodigo.getText());
-                    newDoc.put("contrasenna", txtContraseña.getText());
-                    newDoc.put("correo", txtCorreo.getText());
-                    newDoc.put("imagen", txtImage.getText());
-                    newDoc.put("mFoto", foto);
-                    newDoc.put("mCorreo", correo);
-                    coleccion.save(newDoc);
+                DBCursor cursor = coleccion.find();
+                int encontrado = 0;
+                while(cursor.hasNext()){
+                    DBObject actual = cursor.next();
+                    String cAficionado = (String) actual.get("codigoAficionado");
+                    if(cAficionado.equals(txtCodigo.getText())){
+                        JOptionPane.showMessageDialog(null, "Codigo de Usuario Incorrecto. Ingrese uno diferente.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        encontrado = 1;
+                        break;
+                    }
                 }
+                if(encontrado == 0){
+                    BasicDBObject document = new BasicDBObject();
+					document.put("codigoAficionado", CRUDaficionados.usuarioCRUD);
+					DBCursor docCursor = coleccion.find(document);
+					if(docCursor.hasNext()) {
+						DBObject newDoc = docCursor.next();
+						newDoc.put("codigoAficionado", txtCodigo.getText());
+						newDoc.put("contrasenna", contrasenaEncriptada);
+						newDoc.put("correo", txtCorreo.getText());
+						newDoc.put("imagen", txtImage.getText());
+						newDoc.put("mFoto", foto);
+						newDoc.put("mCorreo", correo);
+						coleccion.save(newDoc);
+					}
 
-                // TODO add your handling code here:
-
-                JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
-                CRUDaficionados ini = new CRUDaficionados(this.codigoAficionado);
-                ini.setVisible(true);
-                this.setVisible(false);
+                    try {
+                        addImage(archi, archi.getName());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        // TODO add your handling code here:
+                    JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+                    Inicio ini = new Inicio(); 
+                    ini.setVisible(true);
+                    this.setVisible(false);
                 }
-                else{
-                    JOptionPane.showMessageDialog(null, "La longitud del codigo supera el limite");
-                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Codigo de Usuario mayor a 15 caracteres.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnFinalizarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        CRUDaficionados cAfi = new CRUDaficionados();
+        cAfi.setVisible(true);
+        this.setVisible(false);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

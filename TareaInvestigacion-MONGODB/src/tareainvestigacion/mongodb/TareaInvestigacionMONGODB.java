@@ -26,6 +26,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 public class TareaInvestigacionMONGODB {
     public static DB db;
     public static DBCollection coleccion;
+    public static String usuarioGlobal;
     /**
      * @param args the command line arguments
     */
