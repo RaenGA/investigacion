@@ -43,16 +43,16 @@ public class CrearAficionado extends javax.swing.JFrame {
     
     public boolean validar(){
         boolean val = true;
-        if((txtCodigo.getText().equals(""))&&(val == true)){
+        if((txtCodigo.getText().isEmpty())&&(val == true)){
             val = false;
         }
-        if((txtContraseña.getText().equals(""))&&(val == true)){
+        if((txtContraseña.getText().isEmpty())&&(val == true)){
             val = false;
         }
-        if((txtCorreo.getText().equals(""))&&(val == true)){
+        if((txtCorreo.getText().isEmpty())&&(val == true)){
             val = false;
         }
-        if((txtImage.getText().equals(""))&&(val == true)){
+        if((txtImage.getText().isEmpty())&&(val == true)){
             val = false;
         }
         return val;
@@ -242,31 +242,35 @@ public class CrearAficionado extends javax.swing.JFrame {
         if(validar() == false){
             JOptionPane.showMessageDialog(null, "Uno de los datos que desea registrar se encuentran vacios");
         }
-        else
-        {
-            int foto = 0, correo = 0;
-            if(chkFoto.isSelected()){
-                foto = 1;
-            }
-            if(chkCorreo.isSelected()){
-                correo = 1;
-            }
-            coleccion = db.getCollection("aficionados");
-            BasicDBObject document = new BasicDBObject();
-            document.put("codigoAficionado","'" + txtCodigo.getText() + "'");
-            document.put("contrasenna","'" + txtContraseña.getText() + "'");
-            document.put("correo","'" + txtCorreo.getText() + "'");
-            document.put("imagen","'" + txtImage.getText() + "'");
-            document.put("mFoto","'" + foto + "'");
-            document.put("mCorreo","'" + correo + "'");
-            coleccion.insert(document);
-            // TODO add your handling code here:
+        else{
+            if(txtCodigo.getText().length() <= 15){
+                int foto = 0, correo = 0;
+                if(chkFoto.isSelected()){
+                    foto = 1;
+                }
+                if(chkCorreo.isSelected()){
+                    correo = 1;
+                }
+                coleccion = db.getCollection("aficionados");
+                BasicDBObject document = new BasicDBObject();
+                document.put("codigoAficionado","'" + txtCodigo.getText() + "'");
+                document.put("contrasenna","'" + txtContraseña.getText() + "'");
+                document.put("correo","'" + txtCorreo.getText() + "'");
+                document.put("imagen","'" + txtImage.getText() + "'");
+                document.put("mFoto","'" + foto + "'");
+                document.put("mCorreo","'" + correo + "'");
+                coleccion.insert(document);
+                // TODO add your handling code here:
 
-            JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
-            CRUDaficionados CrudAfi;
-            CrudAfi = new CRUDaficionados(this.usuario);
-            CrudAfi.setVisible(true);
-            this.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+                CRUDaficionados CrudAfi;
+                CrudAfi = new CRUDaficionados(this.usuario);
+                CrudAfi.setVisible(true);
+                this.setVisible(false);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "La longitud del codigo supera el limite");
+                }
         }
         
     }//GEN-LAST:event_btnFinalizarActionPerformed

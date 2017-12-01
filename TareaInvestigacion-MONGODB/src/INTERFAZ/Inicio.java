@@ -158,35 +158,38 @@ public class Inicio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Codigo Usuario o Contraseña vacias");
         }
         else{
-            String contrasenaDesencriptada;
-            coleccion = db.getCollection("aficionados");
-            DBCursor cursor = coleccion.find();
-            int encontrado = 0;
-            while(cursor.hasNext()){
-                DBObject actual = cursor.next();
-                String cAficionado = (String) actual.get("codigoAficionado");
-                String contrasena = (String) actual.get("contrasenna");
-                contrasenaDesencriptada = TareaInvestigacionMONGODB.desencriptar(contrasena);
-                if(cAficionado.equals(txtCodigo.getText()) && pass.equals(contrasenaDesencriptada)){
-                    encontrado = 1;
-                    break;
-		}
-            }
-            if(encontrado == 1){
-                JOptionPane.showMessageDialog(null, "Usuario y Contraseña Correctas.");
-                if(txtCodigo.getText().equals("ADMINISTRADOR")){
-                    MenuAdmin mAdm = new MenuAdmin();
-                    mAdm.setVisible(true);
-                    this.setVisible(false);
+            if(txtCodigo.getText().length() <= 15){
+                String contrasenaDesencriptada;
+                coleccion = db.getCollection("aficionados");
+                DBCursor cursor = coleccion.find();
+                int encontrado = 0;
+                while(cursor.hasNext()){
+                    DBObject actual = cursor.next();
+                    String cAficionado = (String) actual.get("codigoAficionado");
+                    String contrasena = (String) actual.get("contrasenna");
+                    contrasenaDesencriptada = TareaInvestigacionMONGODB.desencriptar(contrasena);
+                    if(cAficionado.equals(txtCodigo.getText()) && pass.equals(contrasenaDesencriptada)){
+                        encontrado = 1;
+                        break;
+                    }
                 }
-                else{
-                    SeleccionarPartido selecP = new SeleccionarPartido(txtCodigo.getText());
-                    selecP.setVisible(true);
-                    this.setVisible(false);
+                if(encontrado == 1){
+                    JOptionPane.showMessageDialog(null, "Usuario y Contraseña Correctas.");
+                    if(txtCodigo.getText().equals("ADMINISTRADOR")){
+                        MenuAdmin mAdm = new MenuAdmin();
+                        mAdm.setVisible(true);
+                        this.setVisible(false);
+                    }
+                    else{
+                        SeleccionarPartido selecP = new SeleccionarPartido(txtCodigo.getText());
+                        selecP.setVisible(true);
+                        this.setVisible(false);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Codigo o Contraseña Incorrectos.", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "Codigo o Contraseña Incorrectos.", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
+            
         }
         
         

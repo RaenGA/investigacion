@@ -39,6 +39,23 @@ public class Registro extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
+    
+    public boolean validar(){
+        boolean val = true;
+        if((txtCodigo.getText().isEmpty())&&(val == true)){
+            val = false;
+        }
+        if((txtContraseña.getText().isEmpty())&&(val == true)){
+            val = false;
+        }
+        if((txtCorreo.getText().isEmpty())&&(val == true)){
+            val = false;
+        }
+        if((txtImage.getText().isEmpty())&&(val == true)){
+            val = false;
+        }
+        return val;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,50 +224,58 @@ public class Registro extends javax.swing.JFrame {
     }
     
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        int foto = 0, correo = 0;
-        if(chkFoto.isSelected()){
-            foto = 1;
+        if(validar() == false){
+            
         }
-        if(chkCorreo.isSelected()){
-            correo = 1;
-        }
-        if(txtCodigo.getText().isEmpty() || txtContraseña.getText().isEmpty() || txtCorreo.getText().isEmpty() || txtImage.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "No pueden existir campos vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
-        }else{
-            String contrasenaEncriptada = TareaInvestigacionMONGODB.encriptar(txtContraseña.getText());
-            coleccion = db.getCollection("aficionados");
-            DBCursor cursor = coleccion.find();
-            int encontrado = 0;
-            while(cursor.hasNext()){
-                DBObject actual = cursor.next();
-                String cAficionado = (String) actual.get("codigoAficionado");
-                if(cAficionado.equals(txtCodigo.getText())){
-                    JOptionPane.showMessageDialog(null, "Codigo de Usuario Incorrecto. Ingrese uno diferente.", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    encontrado = 1;
-                    break;
-		}
-            }
-            if(encontrado == 0){
-                BasicDBObject document = new BasicDBObject();
-                document.put("codigoAficionado", txtCodigo.getText());
-                document.put("contrasenna", contrasenaEncriptada);
-                document.put("correo", txtCorreo.getText());
-                document.put("imagen", txtImage.getText());
-                document.put("mFoto", foto);
-                document.put("mCorreo", correo);
-                coleccion.insert(document);
-                try {
-                    addImage(archi, archi.getName());
-                } catch (IOException ex) {
-                    Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+        else{
+            if(txtCodigo.getText().length() <= 15){
+                int foto = 0, correo = 0;
+                if(chkFoto.isSelected()){
+                    foto = 1;
                 }
-                // TODO add your handling code here:
-                JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
-                Inicio ini = new Inicio(); 
-                ini.setVisible(true);
-                this.setVisible(false);
+                if(chkCorreo.isSelected()){
+                    correo = 1;
+                }
+                if(txtCodigo.getText().isEmpty() || txtContraseña.getText().isEmpty() || txtCorreo.getText().isEmpty() || txtImage.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "No pueden existir campos vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }else{
+                    String contrasenaEncriptada = TareaInvestigacionMONGODB.encriptar(txtContraseña.getText());
+                    coleccion = db.getCollection("aficionados");
+                    DBCursor cursor = coleccion.find();
+                    int encontrado = 0;
+                    while(cursor.hasNext()){
+                        DBObject actual = cursor.next();
+                        String cAficionado = (String) actual.get("codigoAficionado");
+                        if(cAficionado.equals(txtCodigo.getText())){
+                            JOptionPane.showMessageDialog(null, "Codigo de Usuario Incorrecto. Ingrese uno diferente.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                            encontrado = 1;
+                            break;
+                        }
+                    }
+                    if(encontrado == 0){
+                        BasicDBObject document = new BasicDBObject();
+                        document.put("codigoAficionado", txtCodigo.getText());
+                        document.put("contrasenna", contrasenaEncriptada);
+                        document.put("correo", txtCorreo.getText());
+                        document.put("imagen", txtImage.getText());
+                        document.put("mFoto", foto);
+                        document.put("mCorreo", correo);
+                        coleccion.insert(document);
+                        try {
+                            addImage(archi, archi.getName());
+                        } catch (IOException ex) {
+                            Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        // TODO add your handling code here:
+                        JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+                        Inicio ini = new Inicio(); 
+                        ini.setVisible(true);
+                        this.setVisible(false);
+                    }
+                }
             }
         }
+        
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
        
