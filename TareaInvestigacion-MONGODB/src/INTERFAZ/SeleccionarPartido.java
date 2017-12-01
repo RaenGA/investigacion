@@ -5,32 +5,36 @@
  */
 package INTERFAZ;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
+
 /**
  *
  * @author M Express
  */
 public class SeleccionarPartido extends javax.swing.JFrame {
-
-    String codUsuario;
+    public static String numeroPartido;
+    
     /**
      * Creates new form SeleccionarPartido
      */
     public SeleccionarPartido() {
         initComponents();
         this.setLocationRelativeTo(null);
-        setUsuario();
     }
     
     public SeleccionarPartido(String codUser) {
-        this.codUsuario = codUser;
         initComponents();
         this.setLocationRelativeTo(null);
-        setUsuario();
     }
-    
-    public void setUsuario(){
-        lblUsuario.setText(codUsuario);
-    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -115,9 +119,29 @@ public class SeleccionarPartido extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnSelecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecActionPerformed
-        CRUDcomentarios cCom = new CRUDcomentarios(Integer.valueOf(txtNPartido.getText()),this.codUsuario);
-        cCom.setVisible(true);
-        this.setVisible(false);
+        if(txtNPartido.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Por favor ingrese un número de partido.", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }else{
+            coleccion = db.getCollection("partidos");
+            DBCursor cursor = coleccion.find();
+            int encontrado = 0;
+            while(cursor.hasNext()){
+                DBObject actual = cursor.next();
+                String numP = (String) actual.get("idPartido");
+                if(numP.equals(txtNPartido.getText())){
+                    numeroPartido = txtNPartido.getText();
+                    encontrado = 1;
+                    break;
+		}
+            }
+            if(encontrado == 1){
+                CRUDcomentarios cCom = new CRUDcomentarios();
+                cCom.setVisible(true);
+                this.setVisible(false);
+            }else{
+                JOptionPane.showMessageDialog(null, "No se puede registrar el resumen porque el partido aún no está en el sistema.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnSelecActionPerformed
 
     /**

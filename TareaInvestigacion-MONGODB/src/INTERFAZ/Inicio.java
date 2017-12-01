@@ -158,7 +158,6 @@ public class Inicio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Codigo Usuario o Contraseña vacias");
         }
         else{
-            if(txtCodigo.getText().length() <= 15){
                 String contrasenaDesencriptada;
                 coleccion = db.getCollection("aficionados");
                 DBCursor cursor = coleccion.find();
@@ -188,9 +187,7 @@ public class Inicio extends javax.swing.JFrame {
                     }
                 }else{
                     JOptionPane.showMessageDialog(null, "Codigo o Contraseña Incorrectos.", "ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            
+                }            
         }
         
         

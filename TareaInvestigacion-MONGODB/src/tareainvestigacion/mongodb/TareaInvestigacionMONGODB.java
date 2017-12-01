@@ -39,11 +39,11 @@ public class TareaInvestigacionMONGODB {
         return encrypted;
     }
     
-    public static  String desencriptar(String encriptado){
+    public static  String desencriptar(String pass){
         String seed = "semilla";
         StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
         encryptor.setPassword(seed);
-        String decrypted = encryptor.decrypt(encriptado);
+        String decrypted = encryptor.decrypt(pass);
         return decrypted;
     }
         

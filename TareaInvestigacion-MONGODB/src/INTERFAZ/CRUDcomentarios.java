@@ -5,6 +5,12 @@
  */
 package INTERFAZ;
 
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import javax.swing.table.DefaultTableModel;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
+
 /**
  *
  * @author M Express
@@ -19,8 +25,8 @@ public class CRUDcomentarios extends javax.swing.JFrame {
     public CRUDcomentarios() {
         initComponents();
         this.setLocationRelativeTo(null);
-        setUsuario();
-        setNumPartido();
+        cargarInterfaz();
+        cargarDatos();
     }
     public CRUDcomentarios(int numPart, String codUser) {
         this.numPartido = numPart;
@@ -32,11 +38,39 @@ public class CRUDcomentarios extends javax.swing.JFrame {
     }
     
     public void setNumPartido(){
-        lblNumPartido.setText(numPartido+"");
+        lblInfo.setText(numPartido+"");
     }
     
     public void setUsuario(){
         lblUsuario.setText(codUsuario);
+    }
+    
+    public void cargarInterfaz(){
+        coleccion = db.getCollection("partidos");
+        DBCursor cursor = coleccion.find();
+        while(cursor.hasNext()){
+            DBObject actual = cursor.next();
+            String numP = (String) actual.get("idPartido");
+            if(numP.equals(SeleccionarPartido.numeroPartido)){
+                String val1 = (String) actual.get("equipo1");
+                String val2 = (String) actual.get("equipo2");
+                lblInfo.setText("Partido:  " + val1 + "  VRS  " + val2);
+                break;
+            }
+        }    
+    }
+    
+    public void cargarDatos(){
+        coleccion = db.getCollection("resumen");
+        DBCursor cursor = coleccion.find();
+        DefaultTableModel tb = (DefaultTableModel)tableRes.getModel();
+        while(cursor.hasNext()){
+           DBObject actual = cursor.next();
+           String val1 = (String) actual.get("numeroPartido");
+           String val2 = (String) actual.get("textoResumen");
+           tb.addRow(new Object[] {val1, val2});
+            //tableAficionado.setText(cursor.);
+        }    
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -48,25 +82,21 @@ public class CRUDcomentarios extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableRes = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnCComentario = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        lblNumPartido = new javax.swing.JLabel();
+        lblInfo = new javax.swing.JLabel();
         lblUsuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableRes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Numero", "Comentarios"
+                "NumeroPartido", "Resumen"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -77,30 +107,14 @@ public class CRUDcomentarios extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableRes);
 
-        jLabel1.setText("Comentarios");
+        jLabel1.setText("Resumen");
 
         btnCComentario.setText("Crear Comentario");
         btnCComentario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCComentarioActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Actualizar Comentario");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Eliminar Comentario");
-
-        jButton4.setText("Ver Replay");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
             }
         });
 
@@ -111,10 +125,6 @@ public class CRUDcomentarios extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Numero Partido");
-
-        lblNumPartido.setText("jLabel3");
-
         lblUsuario.setText("Usuario");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -124,23 +134,6 @@ public class CRUDcomentarios extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(34, 34, 34)
-                        .addComponent(lblNumPartido))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 592, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCComentario, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(33, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,6 +143,13 @@ public class CRUDcomentarios extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 592, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCComentario, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,18 +159,12 @@ public class CRUDcomentarios extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(lblNumPartido))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(lblInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCComentario)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton4))
-                .addGap(57, 57, 57)
+                .addGap(28, 28, 28)
+                .addComponent(btnCComentario)
+                .addGap(65, 65, 65)
                 .addComponent(jButton3))
         );
 
@@ -184,22 +178,10 @@ public class CRUDcomentarios extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCComentarioActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       SeleccionarPartido sPart = new SeleccionarPartido(this.codUsuario);
+       SeleccionarPartido sPart = new SeleccionarPartido();
        sPart.setVisible(true);
        this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ActualizarComentario ccom = new ActualizarComentario(this.numPartido,this.codUsuario,0);
-        ccom.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        CRUDreplay cRep = new CRUDreplay(this.codUsuario,this.numPartido,"");
-        cRep.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -238,15 +220,11 @@ public class CRUDcomentarios extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCComentario;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JLabel lblNumPartido;
+    private javax.swing.JLabel lblInfo;
     private javax.swing.JLabel lblUsuario;
+    private javax.swing.JTable tableRes;
     // End of variables declaration//GEN-END:variables
 }
