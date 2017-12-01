@@ -37,6 +37,14 @@ public class TareaInvestigacionMONGODB {
         String encrypted= encryptor.encrypt(pass);
         return encrypted;
     }
+    
+    public static  String desencriptar(String encriptado){
+        String seed = "semilla";
+        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        encryptor.setPassword(seed);
+        String decrypted = encryptor.decrypt(encriptado);
+        return decrypted;
+    }
         
     public void addImage(File image, String imageName) throws java.rmi.UnknownHostException, IOException{
         GridFS gfsImageCollection = new GridFS(coleccion.getDB(), "image");
