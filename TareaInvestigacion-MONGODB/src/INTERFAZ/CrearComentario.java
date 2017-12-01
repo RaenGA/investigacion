@@ -6,6 +6,8 @@
 
 package INTERFAZ;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author M Express
@@ -52,6 +54,11 @@ public class CrearComentario extends javax.swing.JFrame {
         jLabel1.setText("Comentario");
 
         jButton1.setText("Comentar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Crear Comentario");
 
@@ -119,6 +126,15 @@ public class CrearComentario extends javax.swing.JFrame {
         crudcom.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(txtaComentario.getText().equals("")){
+            JOptionPane.showConfirmDialog(null, "No hay ningun comentario para crearlo");
+        }
+        else{
+            
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

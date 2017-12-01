@@ -45,6 +45,23 @@ public class ModificarAficionado extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.usuario = user;
     }
+    
+    public boolean validar(){
+        boolean val = true;
+        if((txtCodigo.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        if((txtContraseña.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        if((txtCorreo.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        if((txtImage.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        return val;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -221,34 +238,39 @@ public class ModificarAficionado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnImageActionPerformed
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        int foto = 0, correo = 0;
-        if(chkFoto.isSelected()){
-            foto = 1;
+        if(validar() == false){
+            JOptionPane.showMessageDialog(null, "Unos de los valores que desea modificar se encuentra vacio");
         }
-        if(chkCorreo.isSelected()){
-            correo = 1;
-        }
-        coleccion = db.getCollection("aficionados");
-        BasicDBObject document = new BasicDBObject();
-        document.put("codigoAficionado", cod);
-        DBCursor docCursor = coleccion.find(document);
-        if(docCursor.hasNext()) {
-            DBObject newDoc = docCursor.next();
-            newDoc.put("codigoAficionado", txtCodigo.getText());
-            newDoc.put("contrasenna", txtContraseña.getText());
-            newDoc.put("correo", txtCorreo.getText());
-            newDoc.put("imagen", txtImage.getText());
-            newDoc.put("mFoto", foto);
-            newDoc.put("mCorreo", correo);
-            coleccion.save(newDoc);
-        }
+        else{
+            int foto = 0, correo = 0;
+            if(chkFoto.isSelected()){
+                foto = 1;
+            }
+            if(chkCorreo.isSelected()){
+                correo = 1;
+            }
+            coleccion = db.getCollection("aficionados");
+            BasicDBObject document = new BasicDBObject();
+            document.put("codigoAficionado", cod);
+            DBCursor docCursor = coleccion.find(document);
+            if(docCursor.hasNext()) {
+                DBObject newDoc = docCursor.next();
+                newDoc.put("codigoAficionado", txtCodigo.getText());
+                newDoc.put("contrasenna", txtContraseña.getText());
+                newDoc.put("correo", txtCorreo.getText());
+                newDoc.put("imagen", txtImage.getText());
+                newDoc.put("mFoto", foto);
+                newDoc.put("mCorreo", correo);
+                coleccion.save(newDoc);
+            }
 
-        // TODO add your handling code here:
+            // TODO add your handling code here:
 
-        JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
-        CRUDaficionados ini = new CRUDaficionados(this.codigoAficionado);
-        ini.setVisible(true);
-        this.setVisible(false);
+            JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+            CRUDaficionados ini = new CRUDaficionados(this.codigoAficionado);
+            ini.setVisible(true);
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     /**

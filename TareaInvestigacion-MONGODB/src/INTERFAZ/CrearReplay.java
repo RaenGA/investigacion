@@ -5,6 +5,8 @@
  */
 package INTERFAZ;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author M Express
@@ -81,6 +83,11 @@ public class CrearReplay extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtaReplay);
 
         jButton2.setText("Crear");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -150,6 +157,15 @@ public class CrearReplay extends javax.swing.JFrame {
         cRep.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if(txtaReplay.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "El replay que va a realizar esta vacio");
+        }
+        else{
+            
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -40,6 +40,23 @@ public class CrearAficionado extends javax.swing.JFrame {
         this.setVisible(true);
         this.usuario = user;
     }
+    
+    public boolean validar(){
+        boolean val = true;
+        if((txtCodigo.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        if((txtContraseña.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        if((txtCorreo.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        if((txtImage.getText().equals(""))&&(val == true)){
+            val = false;
+        }
+        return val;
+    }
 
 
     /**
@@ -222,29 +239,35 @@ public class CrearAficionado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnImageActionPerformed
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        int foto = 0, correo = 0;
-        if(chkFoto.isSelected()){
-            foto = 1;
+        if(validar() == false){
+            JOptionPane.showMessageDialog(null, "Uno de los datos que desea registrar se encuentran vacios");
         }
-        if(chkCorreo.isSelected()){
-            correo = 1;
-        }
-        coleccion = db.getCollection("aficionados");
-        BasicDBObject document = new BasicDBObject();
-        document.put("codigoAficionado","'" + txtCodigo.getText() + "'");
-        document.put("contrasenna","'" + txtContraseña.getText() + "'");
-        document.put("correo","'" + txtCorreo.getText() + "'");
-        document.put("imagen","'" + txtImage.getText() + "'");
-        document.put("mFoto","'" + foto + "'");
-        document.put("mCorreo","'" + correo + "'");
-        coleccion.insert(document);
-        // TODO add your handling code here:
+        else
+        {
+            int foto = 0, correo = 0;
+            if(chkFoto.isSelected()){
+                foto = 1;
+            }
+            if(chkCorreo.isSelected()){
+                correo = 1;
+            }
+            coleccion = db.getCollection("aficionados");
+            BasicDBObject document = new BasicDBObject();
+            document.put("codigoAficionado","'" + txtCodigo.getText() + "'");
+            document.put("contrasenna","'" + txtContraseña.getText() + "'");
+            document.put("correo","'" + txtCorreo.getText() + "'");
+            document.put("imagen","'" + txtImage.getText() + "'");
+            document.put("mFoto","'" + foto + "'");
+            document.put("mCorreo","'" + correo + "'");
+            coleccion.insert(document);
+            // TODO add your handling code here:
 
-        JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
-        CRUDaficionados CrudAfi;
-        CrudAfi = new CRUDaficionados(this.usuario);
-        CrudAfi.setVisible(true);
-        this.setVisible(false);
+            JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+            CRUDaficionados CrudAfi;
+            CrudAfi = new CRUDaficionados(this.usuario);
+            CrudAfi.setVisible(true);
+            this.setVisible(false);
+        }
         
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
