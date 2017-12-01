@@ -12,6 +12,10 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import INTERFAZ.Inicio;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSInputFile;
+import java.io.File;
+import java.io.IOException;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 /**
@@ -34,7 +38,12 @@ public class TareaInvestigacionMONGODB {
         return encrypted;
     }
         
-
+    public void addImage(File image, String imageName) throws java.rmi.UnknownHostException, IOException{
+        GridFS gfsImageCollection = new GridFS(coleccion.getDB(), "image");
+        GridFSInputFile gfsFile = gfsImageCollection.createFile(image);
+        gfsFile.setFilename(imageName);
+        gfsFile.save();
+    }
     
     public static void main(String[] args) {
         try {

@@ -6,23 +6,29 @@
 package INTERFAZ;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSInputFile;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
 /**
  *
  * @author M Express
  */
 public class Registro extends javax.swing.JFrame {
-
+    JFileChooser archivo = new JFileChooser();
+    File archi = archivo.getSelectedFile();
     /**
      * Creates new form Registro
      */
@@ -182,12 +188,19 @@ public class Registro extends javax.swing.JFrame {
             dimg = dimg.getScaledInstance(labelFoto.getWidth(), labelFoto.getHeight(), Image.SCALE_DEFAULT);
             labelFoto.setIcon(new ImageIcon(dimg));
             
+            archi = file;
             /*Imagen Imagen = new Imagen(txtImage.getText());
             jPanel1.add(Imagen);
             jPanel1.repaint();*/
         }
     }//GEN-LAST:event_btnImageActionPerformed
-
+    public void addImage(File image, String imageName) throws UnknownHostException, IOException{
+        GridFS gfsImageCollection = new GridFS(coleccion.getDB(), "image");
+        GridFSInputFile gfsFile = gfsImageCollection.createFile(image);
+        gfsFile.setFilename(imageName);
+        gfsFile.save();
+    }
+    
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         int foto = 0, correo = 0;
         if(chkFoto.isSelected()){
@@ -205,6 +218,12 @@ public class Registro extends javax.swing.JFrame {
         document.put("mFoto", foto);
         document.put("mCorreo", correo);
         coleccion.insert(document);
+        try {
+            addImage(archi, archi.getName());
+        } catch (IOException ex) {
+            Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
         // TODO add your handling code here:
   
         JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
