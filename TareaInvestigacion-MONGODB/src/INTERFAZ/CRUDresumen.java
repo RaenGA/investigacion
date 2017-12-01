@@ -5,25 +5,28 @@
  */
 package INTERFAZ;
 
+import static INTERFAZ.CRUDaficionados.usuarioCRUD;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
+
 /**
  *
  * @author M Express
  */
 public class CRUDresumen extends javax.swing.JFrame {
     
-    String usuario;
+    public static String numPartido;
     /**
      * Creates new form CRUDresumen
      */
     public CRUDresumen() {
         initComponents();
         this.setLocationRelativeTo(null);
-    }
-
-    public CRUDresumen(String user) {
-        initComponents();
-        this.setLocationRelativeTo(null);
-        this.usuario = user;
+        cargarDatos();
     }
 
     /**
@@ -36,7 +39,7 @@ public class CRUDresumen extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableRes = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         lblUsuario = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -47,7 +50,7 @@ public class CRUDresumen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableRes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -63,7 +66,7 @@ public class CRUDresumen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableRes);
 
         jLabel1.setText("Resumen Partido");
 
@@ -146,6 +149,19 @@ public class CRUDresumen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void cargarDatos(){
+        coleccion = db.getCollection("resumen");
+        DBCursor cursor = coleccion.find();
+        DefaultTableModel tb = (DefaultTableModel)tableRes.getModel();
+        while(cursor.hasNext()){
+           DBObject actual = cursor.next();
+           String val1 = (String) actual.get("numeroPartido");
+           String val2 = (String) actual.get("textoResumen");
+           tb.addRow(new Object[] {val1, val2});
+            //tableAficionado.setText(cursor.);
+        }    
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         CrearResumen vCResu = new CrearResumen();
         vCResu.setVisible(true);
@@ -153,13 +169,21 @@ public class CRUDresumen extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ActualizarResumen vAResu = new ActualizarResumen(this.usuario);
-        vAResu.setVisible(true);
-        this.setVisible(false);
+        int filasSeleccionadas = tableRes.getSelectedRowCount();
+        if(filasSeleccionadas == 0){
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna fila");            
+        }else{
+            int row = tableRes.getSelectedRow();
+            numPartido = tableRes.getValueAt(row, 0).toString();
+            
+            ActualizarResumen vAResu = new ActualizarResumen();
+            vAResu.setVisible(true);
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        MenuAdmin mAd = new MenuAdmin(this.usuario);
+        MenuAdmin mAd = new MenuAdmin();
         mAd.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -207,7 +231,7 @@ public class CRUDresumen extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblUsuario;
+    private javax.swing.JTable tableRes;
     // End of variables declaration//GEN-END:variables
 }

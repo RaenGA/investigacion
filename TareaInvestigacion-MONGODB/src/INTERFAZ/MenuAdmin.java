@@ -113,7 +113,7 @@ public class MenuAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        CRUDresumen crudResumen = new CRUDresumen(this.usuario);
+        CRUDresumen crudResumen = new CRUDresumen();
         crudResumen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
