@@ -98,11 +98,9 @@ public class VerComentarios extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableRes = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        btnCComentario = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         lblInfo = new javax.swing.JLabel();
         lblUsuario = new javax.swing.JLabel();
-        btnVerComentario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,14 +122,7 @@ public class VerComentarios extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tableRes);
 
-        jLabel1.setText("Resumen");
-
-        btnCComentario.setText("Crear Comentario");
-        btnCComentario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCComentarioActionPerformed(evt);
-            }
-        });
+        jLabel1.setText("Comentarios");
 
         jButton3.setText("Regresar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -142,13 +133,6 @@ public class VerComentarios extends javax.swing.JFrame {
 
         lblUsuario.setText("Usuario");
 
-        btnVerComentario.setText("Ver Comentarios");
-        btnVerComentario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerComentarioActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -156,25 +140,23 @@ public class VerComentarios extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(288, 288, 288))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 592, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(552, Short.MAX_VALUE)
+                        .addComponent(lblUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCComentario, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(btnVerComentario, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 592, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(270, 270, 270)
+                                .addComponent(jLabel1)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,32 +169,15 @@ public class VerComentarios extends javax.swing.JFrame {
                 .addComponent(lblInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCComentario)
-                    .addComponent(btnVerComentario))
-                .addGap(65, 65, 65)
+                .addGap(116, 116, 116)
                 .addComponent(jButton3))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCComentarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCComentarioActionPerformed
-        CrearComentario ccom = new CrearComentario(this.numPartido,this.codUsuario);
-        ccom.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_btnCComentarioActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       SeleccionarPartido sPart = new SeleccionarPartido();
-       sPart.setVisible(true);
-       this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void btnVerComentarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerComentarioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnVerComentarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,8 +216,6 @@ public class VerComentarios extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCComentario;
-    private javax.swing.JButton btnVerComentario;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

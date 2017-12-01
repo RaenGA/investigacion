@@ -6,30 +6,54 @@
 
 package INTERFAZ;
 
+import static INTERFAZ.Inicio.usuarioInicio;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.desencriptar;
 
 /**
  *
  * @author M Express
  */
 public class CrearComentario extends javax.swing.JFrame {
-    int numPartido;
-    String codUsuario;
+    int numPartido, cont;
+    static String contador;
     /** Creates new form CrearComentario */
     public CrearComentario() {
         initComponents();
         this.setLocationRelativeTo(null);
-        setUsuario();
+        setConsecutivo();
     }
     public CrearComentario(int numPart, String codUser) {
-        this.numPartido = numPart;
-        this.codUsuario = codUser;
         initComponents();
         this.setLocationRelativeTo(null);
-        setUsuario();
     }
-    public void setUsuario(){
-        lblUsuario.setText(codUsuario);
+
+    private void setConsecutivo(){
+        int cont;
+        coleccion = db.getCollection("resumen");
+        DBCursor cursor = coleccion.find();
+        DBObject actual;
+        actual = cursor.next();
+        while(cursor.hasNext()){
+            actual = cursor.next();
+            contador = (String) actual.get("numeroComentario");
+        }
+        
+        cont = Integer.parseInt(contador);
+        System.out.println(cont);
+        cont = cont + 1;
+        contador = String.valueOf(cont);
     }
 
     /** This method is called from within the constructor to
@@ -122,19 +146,36 @@ public class CrearComentario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        CRUDcomentarios crudcom = new CRUDcomentarios(this.numPartido, this.codUsuario);
+        CRUDcomentarios crudcom = new CRUDcomentarios();
         crudcom.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Date date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String fechaActual = hourdateFormat.toString();
         if(txtaComentario.getText().equals("")){
             JOptionPane.showConfirmDialog(null, "No hay ningun comentario para crearlo");
         }
         else{
+            coleccion = db.getCollection("comentarios");
+            BasicDBObject document = new BasicDBObject();
+            document.put("numeroComentario", contador);
+            document.put("aficionado", Inicio.usuarioInicio);
+            document.put("fecha", fechaActual);
+            document.put("textoComentario", txtaComentario.getText());
+            document.put("numeroPartido", SeleccionarPartido.numeroPartido);
+            coleccion.insert(document);
             
+            // TODO add your handling code here:
+            JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+            CRUDcomentarios crudCom = new CRUDcomentarios(); 
+            crudCom.setVisible(true);
+            this.setVisible(false);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+    
 
     /**
      * @param args the command line arguments

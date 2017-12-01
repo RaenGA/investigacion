@@ -19,12 +19,12 @@ import javax.mail.internet.AddressException;
  */
 public class Mail {
 
-    private String from = "jetx954@gmail.com";//tu_correo@gmail.com
-    private String password = "fiiomena11";//tu password: 123456 :)
+    private String from = "gabrielramirez.92@gmail.com";//tu_correo@gmail.com
+    private String password = "cuadraciclo92";//tu password: 123456 :)
     // destinatario1@hotmail.com,destinatario2@hotmail.com, destinatario_n@hotmail.com
     private InternetAddress[] addressTo;
-    private String Subject = "xfasd";//titulo del mensaje
-    private String MessageMail = "dfsdfsd";//contenido del mensaje
+    private String Subject = "Notificacion!";//titulo del mensaje
+    private String MessageMail = "Ha habido un nuevo Reply a tu comentario.";//contenido del mensaje
 
     public Mail(){}
 
@@ -35,8 +35,8 @@ public class Mail {
             props.put("mail.smtp.host", "smtp.gmail.com");
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.user", "jetx954@gmail.com"); // User name
-            props.put("mail.smtp.password", "fiiomena11"); // password
+            props.put("mail.smtp.user", "gabrira09@gmail.com"); // User name
+            props.put("mail.smtp.password", "cuadraciclo92"); // password
             props.put("mail.smtp.port", 587);
             //
             SMTPAutenticar auth = new SMTPAutenticar( getFrom(), getPassword() );
@@ -91,12 +91,12 @@ public class Mail {
     public void setMessage(String value){ this.MessageMail = value; }
     public String getMessage(){ return this.MessageMail; }
     
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         Mail correo = new Mail();
         correo.setTo("jetx959@gmail.com");
         correo.SEND();
         
-    }
+    }*/
 
 }
 

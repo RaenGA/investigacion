@@ -19,7 +19,8 @@ import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.desencriptar;
  * @author M Express
  */
 public class Inicio extends javax.swing.JFrame {
-
+    public static String usuarioInicio;
+    
     /**
      * Creates new form Inicio
      */
@@ -169,6 +170,7 @@ public class Inicio extends javax.swing.JFrame {
                     String contrasena = (String) actual.get("contrasenna");
                     contrasenaDesencriptada = desencriptar(contrasena);
                     if(cAficionado.equals(txtCodigo.getText()) && pass.equals(contrasenaDesencriptada)){
+                        usuarioInicio = cAficionado;
                         encontrado = 1;
                         break;
                     }

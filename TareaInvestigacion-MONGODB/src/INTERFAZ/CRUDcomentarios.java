@@ -214,7 +214,7 @@ public class CRUDcomentarios extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void btnVerComentarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerComentarioActionPerformed
-        VerComentarios vCom = new VerComentarios();
+        CRUDreplay vCom = new CRUDreplay();
         vCom.setVisible(true);
         this.setVisible(false);
         // TODO add your handling code here:

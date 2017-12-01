@@ -5,15 +5,25 @@
  */
 package INTERFAZ;
 
+import static INTERFAZ.CrearComentario.contador;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
-
+import javax.swing.table.DefaultTableModel;
+import tareainvestigacion.mongodb.Mail;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
+//import static INTERFAZ.CRUDreplay.numPartido;
 /**
  *
  * @author M Express
  */
 public class CrearReplay extends javax.swing.JFrame {
-    String usuario;
-    int numPartido;
+    String numPart;
     String comentario;
     /**
      * Creates new form CrearReplay
@@ -21,18 +31,16 @@ public class CrearReplay extends javax.swing.JFrame {
     public CrearReplay() {
         initComponents();
         this.setLocationRelativeTo(null);
+        cargarInterfaz();
     }
     
-    public CrearReplay(String user, int nPart, String com) {
-        initComponents();
-        this.setLocationRelativeTo(null);
-        this.usuario = user;
-        this.numPartido = nPart;
-        this.comentario = com;
-        this.lblComentario.setText(com);
-        this.lblNumPartido.setText(nPart+"");
-        this.lblUsuario.setText(user);
+    public void cargarInterfaz(){
+        numPart = CRUDreplay.numPartido;
+        lblNumPartido.setText(numPart);
+        lblComentario.setText(Inicio.usuarioInicio);
     }
+    
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -153,7 +161,7 @@ public class CrearReplay extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        CRUDreplay cRep = new CRUDreplay(this.usuario,this.numPartido,"");
+        CRUDreplay cRep = new CRUDreplay();
         cRep.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -163,7 +171,41 @@ public class CrearReplay extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "El replay que va a realizar esta vacio");
         }
         else{
-            
+            Date date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String fechaActual = hourdateFormat.toString();
+
+            coleccion = db.getCollection("reply");
+                BasicDBObject document = new BasicDBObject();
+                document.put("numPartido", numPart);
+                document.put("aficionado", Inicio.usuarioInicio);
+                document.put("fecha", fechaActual);
+                document.put("textoComentario", txtaReplay.getText());
+                document.put("numeroPartido", SeleccionarPartido.numeroPartido);
+                coleccion.insert(document);
+
+                // TODO add your handling code here:
+                coleccion = db.getCollection("aficionado");
+                BasicDBObject nDocument = new BasicDBObject();
+                nDocument.put("aficionado", Inicio.usuarioInicio);
+                DBCursor cursor = coleccion.find(nDocument);
+                String correo = "gabrira09@gmail.com";
+                /*if(cursor.hasNext()){
+                    DBObject actual = cursor.next();
+                    correo = (String) actual.get("correo");
+                    System.out.println(correo);
+                    Mail correo1 = new Mail();
+                    correo1.setTo(correo);
+                    correo1.SEND();
+                }*/
+                    Mail correo1 = new Mail();
+                    correo1.setTo(correo);
+                    correo1.SEND();
+                
+                JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+                CRUDreplay crudCom = new CRUDreplay(); 
+                crudCom.setVisible(true);
+                this.setVisible(false);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
