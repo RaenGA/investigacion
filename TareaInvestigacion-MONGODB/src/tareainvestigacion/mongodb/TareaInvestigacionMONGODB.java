@@ -22,6 +22,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
  *
  * @author Marisol CH
  * prueba
+ * esto lo hizo arturo
  */
 public class TareaInvestigacionMONGODB {
     public static DB db;
