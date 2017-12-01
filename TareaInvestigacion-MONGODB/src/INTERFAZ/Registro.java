@@ -225,7 +225,7 @@ public class Registro extends javax.swing.JFrame {
     
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         if(validar() == false){
-            
+            JOptionPane.showMessageDialog(null, "No pueden existir campos vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         else{
             if(txtCodigo.getText().length() <= 15){
@@ -236,46 +236,45 @@ public class Registro extends javax.swing.JFrame {
                 if(chkCorreo.isSelected()){
                     correo = 1;
                 }
-                if(txtCodigo.getText().isEmpty() || txtContraseña.getText().isEmpty() || txtCorreo.getText().isEmpty() || txtImage.getText().isEmpty()){
-                    JOptionPane.showMessageDialog(null, "No pueden existir campos vacíos.", "ERROR", JOptionPane.ERROR_MESSAGE);
-                }else{
-                    String contrasenaEncriptada = TareaInvestigacionMONGODB.encriptar(txtContraseña.getText());
-                    coleccion = db.getCollection("aficionados");
-                    DBCursor cursor = coleccion.find();
-                    int encontrado = 0;
-                    while(cursor.hasNext()){
-                        DBObject actual = cursor.next();
-                        String cAficionado = (String) actual.get("codigoAficionado");
-                        if(cAficionado.equals(txtCodigo.getText())){
-                            JOptionPane.showMessageDialog(null, "Codigo de Usuario Incorrecto. Ingrese uno diferente.", "ERROR", JOptionPane.ERROR_MESSAGE);
-                            encontrado = 1;
-                            break;
-                        }
-                    }
-                    if(encontrado == 0){
-                        BasicDBObject document = new BasicDBObject();
-                        document.put("codigoAficionado", txtCodigo.getText());
-                        document.put("contrasenna", contrasenaEncriptada);
-                        document.put("correo", txtCorreo.getText());
-                        document.put("imagen", txtImage.getText());
-                        document.put("mFoto", foto);
-                        document.put("mCorreo", correo);
-                        coleccion.insert(document);
-                        try {
-                            addImage(archi, archi.getName());
-                        } catch (IOException ex) {
-                            Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        // TODO add your handling code here:
-                        JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
-                        Inicio ini = new Inicio(); 
-                        ini.setVisible(true);
-                        this.setVisible(false);
+                
+                String contrasenaEncriptada = TareaInvestigacionMONGODB.encriptar(txtContraseña.getText());
+                coleccion = db.getCollection("aficionados");
+                DBCursor cursor = coleccion.find();
+                int encontrado = 0;
+                while(cursor.hasNext()){
+                    DBObject actual = cursor.next();
+                    String cAficionado = (String) actual.get("codigoAficionado");
+                    if(cAficionado.equals(txtCodigo.getText())){
+                        JOptionPane.showMessageDialog(null, "Codigo de Usuario Incorrecto. Ingrese uno diferente.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        encontrado = 1;
+                        break;
                     }
                 }
+                if(encontrado == 0){
+                    BasicDBObject document = new BasicDBObject();
+                    document.put("codigoAficionado", txtCodigo.getText());
+                    document.put("contrasenna", contrasenaEncriptada);
+                    document.put("correo", txtCorreo.getText());
+                    document.put("imagen", txtImage.getText());
+                    document.put("mFoto", foto);
+                    document.put("mCorreo", correo);
+                    coleccion.insert(document);
+                    try {
+                        addImage(archi, archi.getName());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        // TODO add your handling code here:
+                    JOptionPane.showMessageDialog(null, "Se realizo con exito la operacion");
+                    Inicio ini = new Inicio(); 
+                    ini.setVisible(true);
+                    this.setVisible(false);
+                }
             }
-        }
-        
+            else{
+                JOptionPane.showMessageDialog(null, "Codigo de Usuario mayor a 15 caracteres.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }       
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
        

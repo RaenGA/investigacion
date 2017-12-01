@@ -212,6 +212,19 @@ public class CrearResumen extends javax.swing.JFrame {
             }
             if(encontrado == 1){
                 coleccion = db.getCollection("resumen");
+                DBCursor nCursor = coleccion.find();
+                int nEncontrado = 0;
+                while(cursor.hasNext()){
+                    DBObject actual = nCursor.next();
+                    String numP = (String) actual.get("numeroPartido");
+                    if(numP.equals(txtNumPartido.getText())){
+                        nEncontrado = 1;
+                        break;
+                    }
+                }
+                if(nEncontrado == 0){
+                    
+                }
                 BasicDBObject document = new BasicDBObject();
                 document.put("numeroPartido", txtNumPartido.getText());
                 document.put("textoResumen", jTextArea1.getText());
@@ -229,7 +242,6 @@ public class CrearResumen extends javax.swing.JFrame {
                 this.setVisible(false);
             }else{
                 JOptionPane.showMessageDialog(null, "No se puede registrar el resumen porque el partido aún no está en el sistema.", "ERROR", JOptionPane.ERROR_MESSAGE);
-
             }
         }
     }//GEN-LAST:event_jButton3ActionPerformed
