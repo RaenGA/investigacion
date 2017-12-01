@@ -13,6 +13,7 @@ import tareainvestigacion.mongodb.TareaInvestigacionMONGODB;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
 import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.usuarioGlobal;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.desencriptar;
 /**
  *
  * @author M Express
@@ -166,7 +167,7 @@ public class Inicio extends javax.swing.JFrame {
                     DBObject actual = cursor.next();
                     String cAficionado = (String) actual.get("codigoAficionado");
                     String contrasena = (String) actual.get("contrasenna");
-                    contrasenaDesencriptada = TareaInvestigacionMONGODB.desencriptar(contrasena);
+                    contrasenaDesencriptada = desencriptar(contrasena);
                     if(cAficionado.equals(txtCodigo.getText()) && pass.equals(contrasenaDesencriptada)){
                         encontrado = 1;
                         break;

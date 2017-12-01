@@ -40,6 +40,7 @@
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jButton2" max="32767" attributes="0"/>
                                   <Component id="jButton3" max="32767" attributes="0"/>
+                                  <Component id="btnComentarios" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -63,9 +64,11 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
               <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jButton3" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="63" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+              <Component id="btnComentarios" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="40" max="32767" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -105,6 +108,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Usuario"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnComentarios">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="CRUD Comentarios"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnComentariosActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
