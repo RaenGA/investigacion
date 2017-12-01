@@ -29,24 +29,27 @@ public class TareaInvestigacionMONGODB {
     public static DBCollection coleccion;
     public static String usuarioGlobal;
     /**
+     * @param encriptado
      * @param args the command line arguments
+     * @return 
     */
+    public static String desencriptar(String encriptado){
+        String seed = "semilla";
+        StandardPBEStringEncryptor encryptor;
+        encryptor = new StandardPBEStringEncryptor();
+        encryptor.setPassword(seed);
+        String decrypted = encryptor.decrypt(encriptado);
+        return decrypted;
+    }
     
     public static  String encriptar(String pass){
         String seed = "semilla";
         StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
         encryptor.setPassword(seed);
-        String encrypted= encryptor.encrypt(pass);
+        String encrypted = encryptor.encrypt(pass);
         return encrypted;
     }
     
-    public static  String desencriptar(String pass){
-        String seed = "semilla";
-        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        encryptor.setPassword(seed);
-        String decrypted = encryptor.decrypt(pass);
-        return decrypted;
-    }
         
     public void addImage(File image, String imageName) throws java.rmi.UnknownHostException, IOException{
         GridFS gfsImageCollection = new GridFS(coleccion.getDB(), "image");
