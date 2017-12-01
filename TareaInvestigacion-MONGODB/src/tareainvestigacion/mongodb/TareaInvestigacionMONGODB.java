@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import INTERFAZ.Inicio;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 /**
  *
@@ -24,6 +25,17 @@ public class TareaInvestigacionMONGODB {
     /**
      * @param args the command line arguments
     */
+    
+    public static  String encriptar(String pass){
+        String seed = "semilla";
+        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        encryptor.setPassword(seed);
+        String encrypted= encryptor.encrypt(pass);
+        return encrypted;
+    }
+        
+
+    
     public static void main(String[] args) {
         try {
             Mongo mongo  = new Mongo("localhost", 27017);
@@ -32,6 +44,7 @@ public class TareaInvestigacionMONGODB {
         } catch (UnknownHostException ex) {
             Logger.getLogger(TareaInvestigacionMONGODB.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         Inicio vIn = new Inicio();
         vIn.setVisible(true);
     }
