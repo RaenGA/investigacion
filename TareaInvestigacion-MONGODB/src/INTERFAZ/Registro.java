@@ -74,6 +74,8 @@ public class Registro extends javax.swing.JFrame {
 
         jLabel4.setText("Foto");
 
+        txtImage.setEnabled(false);
+
         btnImage.setText("Seleccionar foto");
         btnImage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

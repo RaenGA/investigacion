@@ -5,8 +5,13 @@
  */
 package INTERFAZ;
 
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import tareainvestigacion.mongodb.TareaInvestigacionMONGODB;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.coleccion;
+import static tareainvestigacion.mongodb.TareaInvestigacionMONGODB.db;
 
 /**
  *
@@ -48,10 +53,10 @@ public class Inicio extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JTextField();
         btnIniciar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        passField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,6 +87,12 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
+        passField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,8 +111,8 @@ public class Inicio extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addGap(60, 60, 60)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(txtCodigo)))
+                            .addComponent(txtCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                            .addComponent(passField)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(155, 155, 155)
                         .addComponent(btnIniciar)))
@@ -125,7 +136,7 @@ public class Inicio extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(54, 54, 54)
                 .addComponent(btnIniciar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
@@ -142,19 +153,39 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-        if(txtCodigo.getText().equals("")||txtPassword.getText().equals("")){
+        String pass = new String(passField.getPassword());
+        if(txtCodigo.getText().equals("")||pass.equals("")){
             JOptionPane.showMessageDialog(null, "Codigo Usuario o Contraseña vacias");
         }
         else{
-            if(txtCodigo.getText().equals("admin")){
-                MenuAdmin mAdm = new MenuAdmin();
-                mAdm.setVisible(true);
-                this.setVisible(false);
+            String contrasenaDesencriptada;
+            coleccion = db.getCollection("aficionados");
+            DBCursor cursor = coleccion.find();
+            int encontrado = 0;
+            while(cursor.hasNext()){
+                DBObject actual = cursor.next();
+                String cAficionado = (String) actual.get("codigoAficionado");
+                String contrasena = (String) actual.get("contrasenna");
+                contrasenaDesencriptada = TareaInvestigacionMONGODB.desencriptar(contrasena);
+                if(cAficionado.equals(txtCodigo.getText()) && pass.equals(contrasenaDesencriptada)){
+                    encontrado = 1;
+                    break;
+		}
             }
-            else{
-                SeleccionarPartido selecP = new SeleccionarPartido(txtCodigo.getText());
-                selecP.setVisible(true);
-                this.setVisible(false);
+            if(encontrado == 1){
+                JOptionPane.showMessageDialog(null, "Usuario y Contraseña Correctas.");
+                if(txtCodigo.getText().equals("ADMINISTRADOR")){
+                    MenuAdmin mAdm = new MenuAdmin();
+                    mAdm.setVisible(true);
+                    this.setVisible(false);
+                }
+                else{
+                    SeleccionarPartido selecP = new SeleccionarPartido(txtCodigo.getText());
+                    selecP.setVisible(true);
+                    this.setVisible(false);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Codigo o Contraseña Incorrectos.", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
         
@@ -164,6 +195,10 @@ public class Inicio extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         abrirMenu();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void passFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,7 +242,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPasswordField passField;
     private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtPassword;
     // End of variables declaration//GEN-END:variables
 }
